@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PS5 SlopKit Jailbreak</title>
   <link rel="stylesheet" href="main.css?v=final">
+  <style>
+    .category-title { text-align: left; color: #f0f6fc; border-bottom: 1px solid #30363d; padding-bottom: 5px; margin-top: 25px; font-size: 18px; font-family: sans-serif; }
+    .glossario-box { text-align: left; background: #21262d; padding: 15px; border-radius: 8px; border: 1px solid #30363d; margin-top: 15px; font-size: 14px; line-height: 1.6; font-family: sans-serif; color: #c9d1d9; }
+  </style>
 </head>
 <body>
   <div class="p-2">
@@ -26,6 +30,15 @@
     <p class="text-secondary mt-2">Jordy, Egy, Sonic, Yenyen, Zeco, Gezine, Echostretch, Ufm42, TheFloW, John Tornblom, Flatz, Idlesauce and PS5 R&amp;D Discord.</p>
   </div>
 
+  <!-- Seção de Documentação Técnica posicionada corretamente fora do script -->
+  <div class="category-title">🧠 Glossário Técnico (Kernel & Exploit)</div>
+  <div class="glossario-box">
+      <p><strong style="color: #ff7b72;">Use-After-Free (UAF):</strong> Falha que ocorre quando o sistema libera um espaço de memória (Free), mas o programa continua com um ponteiro ativo tentando usar (Use) aquele endereço corrompido.</p>
+      <p><strong style="color: #ff7b72;">Kernel Exploit (Ex: P2JB / Luac0re):</strong> Código projetado para quebrar a segurança do núcleo do sistema operacional, elevando os privilégios do usuário comum para o nível máximo (Root/Administrador).</p>
+      <p><strong style="color: #ff7b72;">Hypervisor / Slopervisor:</strong> Camada ultra-protegida de hardware/software instalada pela Sony queurosupervisiona o Kernel. Em firmwares como o 13.60, ela impede modificações no sistema mesmo após um Kernel Exploit, exigindo ataques físicos por hardware (glitching) para ser derrotada.</p>
+      <p><strong style="color: #ff7b72;">Payload (.bin):</strong> A carga útil ou o programa executável de modificação (como o <em>etaHEN</em>) que é transmitido via rede para ativar funções de homebrew e Debug Settings na memória RAM liberada do PS5.</p>
+  </div>
+
   <script>
     try {
       var firmwareMatch = /PlayStation 5\/(\d+\.\d+)/.exec(navigator.userAgent);
@@ -36,3 +49,4 @@
   </script>
 </body>
 </html>
+
