@@ -1,101 +1,38 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slopkit PS5 Alternativo</title>
-    <style>
-        body { background-color: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 30px; margin: 0; }
-        .container { max-width: 800px; margin: auto; background: #161b22; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 1px solid #30363d; }
-        h1 { color: #58a6ff; margin-bottom: 5px; font-size: 28px; }
-        .version { color: #8b949e; font-size: 14px; margin-bottom: 25px; }
-        .config-box { margin-bottom: 30px; background: #21262d; padding: 15px; border-radius: 8px; border: 1px solid #30363d; }
-        label { font-weight: bold; margin-right: 10px; color: #f0f6fc; }
-        input { padding: 10px; font-size: 16px; border-radius: 6px; border: 1px solid #30363d; background: #0d1117; color: white; width: 160px; text-align: center; }
-        .category-title { text-align: left; color: #f0f6fc; border-bottom: 1px solid #30363d; padding-bottom: 5px; margin-top: 25px; font-size: 18px; }
-        .grid-botoes { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 15px; }
-        button { background-color: #1f6feb; color: white; border: none; padding: 12px; font-size: 14px; font-weight: bold; cursor: pointer; border-radius: 6px; transition: background 0.2s; border: 1px solid rgba(255,255,255,0.1); }
-        button:hover { background-color: #388bfd; }
-        .status-log { margin-top: 30px; background: #0d1117; padding: 15px; border-radius: 6px; text-align: left; font-family: monospace; font-size: 13px; color: #7ee787; border: 1px solid #30363d; max-height: 150px; overflow-y: auto; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PS5 SlopKit Jailbreak</title>
+  <link rel="stylesheet" href="main.css?v=final">
 </head>
 <body>
+  <div class="p-2">
+    <h1 class="text-center">PS5 SlopKit Jailbreak (9.00-12.00)</h1>
+    <p class="text-center" id="top-bar-text">Current Firmware: <span class="fw-bold" id="current-fw">Unknown</span></p>
+  </div>
 
-<div class="container">
-    <h1>Slopkit PS5 Host</h1>
-    <div class="version">Painel customizável para testes e payloads (Suporte a offsets pendente)</div>
-
-    <!-- Painel de Configuração de Rede -->
-    <div class="config-box">
-        <label for="consoleIp">IP do PlayStation 5:</label>
-        <input type="text" id="consoleIp" value="192.168.1.100">
-        <label for="consolePort" style="margin-left: 15px;">Porta:</label>
-        <input type="text" id="consolePort" value="9020" style="width: 70px;">
+  <div id="main-content">
+    <div id="pre-jb-view" class="selected">
+      <a tabindex="0" class="btn fw-bold" id="run-jb"
+         href="slopkit/poops.html?go=1&amp;auto=1&amp;production=1&amp;trigger=netcontrol&amp;attempts=8&amp;only=ps0_preflight,ps1_prepare,ps3_stage0,ps4_validate,ps5_stage1,ps6_stage2,ps8_stage3,ps9_stage4,ps10_stage5&amp;log=debug&amp;payload=1&amp;v=final">Jailbreak</a>
+      <a tabindex="0" class="btn btn-secondary" id="run-sender"
+         href="slopkit/poops.html?go=1&amp;auto=1&amp;production=1&amp;trigger=netcontrol&amp;attempts=8&amp;only=ps0_preflight,ps1_prepare,ps3_stage0,ps4_validate,ps5_stage1,ps6_stage2,ps8_stage3,ps9_stage4,ps10_stage5&amp;log=debug&amp;payload=1&amp;reuse=1&amp;v=final">Payloads (sender)</a>
     </div>
+  </div>
 
-    <!-- Categoria: Sistema e Desbloqueio -->
-    <div class="category-title">🛠️ Sistema & Ambiente</div>
-    <div class="grid-botoes">
-        <button onclick="enviarPayload('payloads/etaHEN.bin')">Carregar etaHEN</button>
-        <button onclick="enviarPayload('payloads/kstuff.bin')">Ativar Kstuff</button>
-        <button onclick="enviarPayload('payloads/libhijacker.bin')">Libhijacker</button>
-    </div>
+  <div class="position-relative text-center p-2 mb-2">
+    <p class="text-secondary">Credits</p>
+    <p class="text-secondary mt-2">Jordy, Egy, Sonic, Yenyen, Zeco, Gezine, Echostretch, Ufm42, TheFloW, John Tornblom, Flatz, Idlesauce and PS5 R&amp;D Discord.</p>
+  </div>
 
-    <!-- Categoria: Ferramentas Básicas -->
-    <div class="category-title">📂 Utilitários</div>
-    <div class="grid-botoes">
-        <button onclick="enviarPayload('payloads/ftpserver.bin')">Servidor FTP</button>
-        <button onclick="enviarPayload('payloads/backup.bin')">Backup de Banco de Dados</button>
-        <button onclick="enviarPayload('payloads/elfloader.bin')">Elf Loader</button>
-    </div>
-
-    <!-- Registro de status para o desenvolvedor ver se funcionou -->
-    <div class="status-log" id="logBox">
-        [Sistema]: Painel carregado. Aguardando comando...
-    </div>
-</div>
-
-<script>
-    function registrarLog(texto) {
-        const logBox = document.getElementById('logBox');
-        logBox.innerHTML += "<br>[Status]: " + texto;
-        logBox.scrollTop = logBox.scrollHeight;
-    }
-
-    // FUNÇÃO REAL DE REDE: Envia o binário para a porta aberta no PS5
-    async function enviarPayload(caminhoPayload) {
-        const ip = document.getElementById('consoleIp').value;
-        const porta = document.getElementById('consolePort').value;
-        
-        registrarLog(`Iniciando envio de ${caminhoPayload} para ${ip}:${porta}...`);
-
-        try {
-            // 1. Busca o arquivo .bin dentro do seu próprio repositório
-            const resposta = await fetch(caminhoPayload);
-            if (!resposta.ok) throw new Error("Arquivo binário não encontrado no servidor.");
-            
-            const bufferDoPayload = await resposta.arrayBuffer();
-
-            // 2. Conecta via socket diretamente no IP e porta do PS5
-            const socket = new WebSocket(`ws://${ip}:${porta}`);
-            socket.binaryType = "arraybuffer";
-
-            socket.onopen = function() {
-                registrarLog("Conexão estabelecida com o PS5! Injetando binário...");
-                socket.send(bufferDoPayload);
-                registrarLog("Payload enviado com sucesso! Verifique a tela do console.");
-                socket.close();
-            };
-
-            socket.onerror = function(erro) {
-                registrarLog("Falha na conexão de rede. Certifique-se de que o exploit inicial rodou no PS5 e a porta está aberta.");
-            };
-
-        } catch (erro) {
-            registrarLog("Erro interno: " + erro.message);
-        }
-    }
-</script>
-
+  <script>
+    try {
+      var firmwareMatch = /PlayStation 5\/(\d+\.\d+)/.exec(navigator.userAgent);
+      var firmware = firmwareMatch ? firmwareMatch[1] : "";
+      document.getElementById("current-fw").textContent = firmware || "Not detected";
+    } catch (e) { }
+    try { document.getElementById("run-jb").focus(); } catch (e) { }
+  </script>
 </body>
 </html>
