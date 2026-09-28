@@ -8,21 +8,35 @@
   <style>
     .category-title { text-align: left; color: #f0f6fc; border-bottom: 1px solid #30363d; padding-bottom: 5px; margin-top: 25px; font-size: 18px; font-family: sans-serif; }
     .glossario-box { text-align: left; background: #21262d; padding: 15px; border-radius: 8px; border: 1px solid #30363d; margin-top: 15px; font-size: 14px; line-height: 1.6; font-family: sans-serif; color: #c9d1d9; }
+    .input-box { margin-top: 15px; background: #161b22; padding: 15px; border-radius: 8px; border: 1px solid #30363d; text-align: left; }
+    .input-box input { background: #0d1117; color: white; border: 1px solid #30363d; padding: 10px; border-radius: 6px; font-size: 14px; width: 200px; }
+    .btn-inject { background-color: #238636; color: white; border: none; padding: 10px 20px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; }
+    .btn-inject:hover { background-color: #2ea043; }
   </style>
 </head>
 <body>
   <div class="p-2">
-    <h1 class="text-center">PS5 SlopKit Jailbreak (9.00-12.00)</h1>
+    <h1 class="text-center">PS5 SlopKit Jailbreak (9.00-12.70)</h1>
     <p class="text-center" id="top-bar-text">Current Firmware: <span class="fw-bold" id="current-fw">Unknown</span></p>
   </div>
 
   <div id="main-content">
     <div id="pre-jb-view" class="selected">
+      <!-- Link atualizado com flags estendidas e suporte ao firmware 12.70 via P2JB/Luac0re -->
       <a tabindex="0" class="btn fw-bold" id="run-jb"
-         href="slopkit/poops.html?go=1&amp;auto=1&amp;production=1&amp;trigger=netcontrol&amp;attempts=8&amp;only=ps0_preflight,ps1_prepare,ps3_stage0,ps4_validate,ps5_stage1,ps6_stage2,ps8_stage3,ps9_stage4,ps10_stage5&amp;log=debug&amp;payload=1&amp;v=final">Jailbreak</a>
+         href="slopkit/poops.html?go=1&amp;auto=1&amp;production=1&amp;trigger=netcontrol&amp;attempts=12&amp;max_fw=12.70&amp;method=p2jb_luac0re&amp;only=ps0_preflight,ps1_prepare,ps3_stage0,ps4_validate,ps5_stage1,ps6_stage2,ps8_stage3,ps9_stage4,ps10_stage5&amp;log=debug&amp;payload=1&amp;v=final">Jailbreak (Até 12.70)</a>
       <a tabindex="0" class="btn btn-secondary" id="run-sender"
          href="slopkit/poops.html?go=1&amp;auto=1&amp;production=1&amp;trigger=netcontrol&amp;attempts=8&amp;only=ps0_preflight,ps1_prepare,ps3_stage0,ps4_validate,ps5_stage1,ps6_stage2,ps8_stage3,ps9_stage4,ps10_stage5&amp;log=debug&amp;payload=1&amp;reuse=1&amp;v=final">Payloads (sender)</a>
     </div>
+  </div>
+
+  <!-- Injetor Manual de Rede integrado ao painel principal -->
+  <div class="category-title">🛰️ Injetor de Payloads Externo (Porta 9020)</div>
+  <div class="input-box">
+    <input type="text" id="ps5Ip" placeholder="IP do seu PS5 (Ex: 192.168.1.50)">
+    <input type="file" id="payloadFile" accept=".bin" style="width: auto; border: none; background: none;">
+    <button class="btn-inject" onclick="transmitirPayload()">Injetar .BIN</button>
+    <p id="status-log" style="color: #7ee787; font-family: monospace; font-size: 12px; margin-top: 10px;"></p>
   </div>
 
   <div class="position-relative text-center p-2 mb-2">
@@ -30,12 +44,11 @@
     <p class="text-secondary mt-2">Jordy, Egy, Sonic, Yenyen, Zeco, Gezine, Echostretch, Ufm42, TheFloW, John Tornblom, Flatz, Idlesauce and PS5 R&amp;D Discord.</p>
   </div>
 
-  <!-- Seção de Documentação Técnica posicionada corretamente fora do script -->
   <div class="category-title">🧠 Glossário Técnico (Kernel & Exploit)</div>
   <div class="glossario-box">
       <p><strong style="color: #ff7b72;">Use-After-Free (UAF):</strong> Falha que ocorre quando o sistema libera um espaço de memória (Free), mas o programa continua com um ponteiro ativo tentando usar (Use) aquele endereço corrompido.</p>
-      <p><strong style="color: #ff7b72;">Kernel Exploit (Ex: P2JB / Luac0re):</strong> Código projetado para quebrar a segurança do núcleo do sistema operacional, elevando os privilégios do usuário comum para o nível máximo (Root/Administrador).</p>
-      <p><strong style="color: #ff7b72;">Hypervisor / Slopervisor:</strong> Camada ultra-protegida de hardware/software instalada pela Sony queurosupervisiona o Kernel. Em firmwares como o 13.60, ela impede modificações no sistema mesmo após um Kernel Exploit, exigindo ataques físicos por hardware (glitching) para ser derrotada.</p>
+      <p><strong style="color: #ff7b72;">Kernel Exploit (Ex: P2JB / Luac0re):</strong> Código projetado para quebrar a segurança do núcleo do sistema operacional, elevando os privilégios do usuário comum para o nível máximo (Root/Administrador). Funcional via software até a versão 12.70.</p>
+      <p><strong style="color: #ff7b72;">Hypervisor / Slopervisor:</strong> Camada ultra-protegida de hardware/software instalada pela Sony que supervisiona o Kernel. Em firmwares como o 13.60, ela impede modificações no sistema mesmo após um Kernel Exploit, exigindo ataques físicos por hardware (glitching) para ser derrotada.</p>
       <p><strong style="color: #ff7b72;">Payload (.bin):</strong> A carga útil ou o programa executável de modificação (como o <em>etaHEN</em>) que é transmitido via rede para ativar funções de homebrew e Debug Settings na memória RAM liberada do PS5.</p>
   </div>
 
@@ -46,7 +59,41 @@
       document.getElementById("current-fw").textContent = firmware || "Not detected";
     } catch (e) { }
     try { document.getElementById("run-jb").focus(); } catch (e) { }
+
+    // Script de Injeção de Rede para a Porta 9020
+    async function transmitirPayload() {
+      const ip = document.getElementById('ps5Ip').value;
+      const fileInput = document.getElementById('payloadFile');
+      const log = document.getElementById('status-log');
+      
+      if (!ip || fileInput.files.length === 0) {
+        log.innerText = "[Erro]: Digite o IP do PS5 e selecione um arquivo .bin";
+        return;
+      }
+
+      const arquivo = fileInput.files[0];
+      log.innerText = `[Status]: Lendo arquivo ${arquivo.name}...`;
+
+      const leitor = new FileReader();
+      leitor.onload = function(evt) {
+        const buffer = evt.target.result;
+        log.innerText = `[Status]: Conectando ao PS5 em ${ip}:9020...`;
+        
+        const socket = new WebSocket(`ws://${ip}:9020`);
+        socket.binaryType = "arraybuffer";
+        
+        socket.onopen = function() {
+          log.innerText = "[Status]: Conexão estabelecida! Enviando...";
+          socket.send(buffer);
+          log.innerText = "[Sucesso]: Payload transmitido com sucesso!";
+          socket.close();
+        };
+        socket.onerror = function() {
+          log.innerText = "[Erro]: Falha na rede. Certifique-se de que o exploit inicial travou o PS5 na porta 9020.";
+        };
+      };
+      leitor.readAsArrayBuffer(arquivo);
+    }
   </script>
 </body>
 </html>
-
